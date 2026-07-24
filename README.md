@@ -1,12 +1,14 @@
 # Wea
 
-**El lenguaje ensamblador chileno.** Escrito en ensamblador de verdad (MASM x64, cero
-dependencias, cero runtime de C — puro kernel32), porque hacer un lenguaje de bajo nivel
-sobre Python no tiene ninguna gracia.
+Estimado lector:
 
-Wea es el hermano chico y pulento del [lenguaje Wea de alto nivel](correcciones.md): la
-misma familia, un piso más abajo. Acá no hay variables ni closures — hay registros con
-nombre de garabato, una pila que se te puede ir a la chucha, y saltos condicionales po.
+Reciba usted, antes que nada, un cordial y afectuoso saludo. Constituye para mí un honor
+inconmensurable, así como una fuente de la más profunda satisfacción, darle la bienvenida a la
+documentación oficial de **Wea**, el lenguaje ensamblador chileno. Me permito señalar que el presente
+lenguaje se encuentra escrito en ensamblador auténtico (MASM x64, con absoluta
+ausencia de dependencias y prescindiendo por completo del runtime de C — únicamente kernel32).
+
+Permítame ilustrar lo anterior con un ejemplo:
 
 ```
 # hola.wea
@@ -22,21 +24,29 @@ inicio:
 hola conchetumare, soy Wea
 ```
 
-## Compilar
+## De la compilación del sistema
 
-Necesitas Visual Studio 2022 con las herramientas de C++ (por `ml64` y `link`):
+Me permito poner en su  conocimiento que, para proceder a la construcción del
+presente software, le será menester contar con Visual Studio 2022 provisto de sus herramientas
+de C++ (las cuales suministran, con la gentileza que las caracteriza, tanto `ml64` como `link`).
+Cumplido dicho requisito, tenga usted la amabilidad de ejecutar:
 
 ```
 .\build.bat
 ```
 
-Deja `bin\wea.exe`. Correr los tests:
+Dicha operación depositará respetuosamente `bin\wea.exe` a su disposición. Si además tuviese
+usted a bien verificar la corrección del conjunto — gesto que le agradecería de todo corazón —
+le ruego ejecutar:
 
 ```
 powershell -File tests\corre_tests.ps1
 ```
 
-## Uso
+## Del uso cotidiano
+
+A continuación, y agradeciendo de antemano su paciencia, me permito detallar las modalidades de
+invocación que el ejecutable tiene el agrado de ofrecerle:
 
 ```
 wea corre programa.wea [--semilla=N]    ejecuta (interpretado)
@@ -45,87 +55,99 @@ wea compila programa.wea                genera el .gen.asm (MASM x64)
 wea programa.wea                        atajo de corre
 ```
 
-Exit codes: `0` todo filete · `1` reventó corriendo (o `conchetumare`) · `2` no compiló.
+En lo concerniente a los códigos de salida, sírvase usted tomar nota: `0` significa que todo ha
+concluido de manera enteramente satisfactoria; `1` indica que la ejecución ha encontrado un
+infortunio en tiempo de ejecución (o bien que el programa ha invocado `conchetumare`, instrucción
+cuyo nombre le suplico disculpar); `2` comunica, muy a mi pesar, que la compilación no ha podido
+llevarse a término.
 
-### Compilar a .exe nativo
+### De la compilación a ejecutable nativo
 
 ```
 .\compila.bat programa.wea      ->  bin\programa.exe
 ```
 
-Sí: Wea también es un **compilador de verdad**. `wea compila` traduce el bytecode a
-ensamblador MASM x64 (los 8 registros garabato quedan mapeados a registros x64 reales:
-`wn`→`ebx`, `ql`→`ebp`, `pico`→`esi`, `tetas`→`edi`, `pichula`→`r12d`, `poto`→`r13d`,
-`chucha`→`r14d`, `raja`→`r15d`), y `compila.bat` lo pasa por `ml64` + `link` junto al
-runtime. Sale un ejecutable standalone de ~8 KB que corre sin la VM. `culialo pico, wn`
-termina siendo un `imul` de verdad po.
+Me es sumamente grato informarle que Wea constituye, asimismo, un compilador en el sentido más
+riguroso del término. La orden `wea compila` traduce el bytecode a ensamblador MASM x64,
+quedando los ocho registros de denominación malsonante — por la cual le reitero mis más sentidas
+excusas — dignamente aposentados en registros x64 auténticos (`wn`→`ebx`, `ql`→`ebp`,
+`pico`→`esi`, `tetas`→`edi`, `pichula`→`r12d`, `poto`→`r13d`, `chucha`→`r14d`, `raja`→`r15d`);
+acto seguido, `compila.bat` somete el resultado a la consideración de `ml64` y `link` en
+compañía del runtime. El fruto de tan laborioso proceso es un ejecutable autónomo de
+aproximadamente 8 KB que funciona con total independencia de la máquina virtual. Tenga usted a
+bien observar que `culialo pico, wn` deviene, efectivamente, en un `imul` legítimo.
 
-## Los registros
+## De los registros
 
-Once registros de 32 bits con signo. Todos garabatos, como corresponde:
+El lenguaje pone a su entera disposición once registros de 32 bits con signo, cuyas
+denominaciones — le ruego encarecidamente asirse de su asiento — son las que siguen:
 
-| Registro | # | Qué es |
+| Registro | # | Naturaleza y cometido |
 |---|---|---|
-| `wn` | 0 | uso general |
-| `ql` | 1 | uso general |
-| `pico` | 2 | uso general — por convención, el valor de retorno |
-| `tetas` | 3 | uso general |
-| `pichula` | 4 | uso general |
-| `poto` | 5 | uso general |
-| `chucha` | 6 | uso general |
-| `raja` | 7 | uso general |
-| `hoyo` | 8 | puntero de pila (SP) |
-| `ojete` | 9 | puntero de marco (BP) |
-| `sapeo` | 10 | flags de `cachai si` — solo lectura, el sapeo no se toca |
+| `wn` | 0 | de propósito general |
+| `ql` | 1 | de propósito general |
+| `pico` | 2 | de propósito general — por convención, tiene el honor de portar el valor de retorno |
+| `tetas` | 3 | de propósito general |
+| `pichula` | 4 | de propósito general |
+| `poto` | 5 | de propósito general |
+| `chucha` | 6 | de propósito general |
+| `raja` | 7 | de propósito general |
+| `hoyo` | 8 | puntero de pila (SP), si me permite la expresión |
+| `ojete` | 9 | puntero de marco (BP), y le agradezco no hacer preguntas |
+| `sapeo` | 10 | indicadores de `cachai si` — de sola lectura; le imploro no escribirle |
 
-## La memoria
+## De la memoria
 
-65536 celdas de 32 bits, direccionadas **por celda** (no por byte). Los datos de `.la wea`
-parten en la celda 0. La pila parte del tope (65536) y crece hacia abajo. Los strings son
-un codepoint Unicode por celda, terminados en 0 — así que las tildes y la ñ funcionan po.
+El sistema administra 65.536 celdas de 32 bits, direccionadas por celda y no por byte, detalle
+que me permito subrayar para su mayor comodidad. Los datos de la sección `.la wea` tienen su
+morada a partir de la celda 0; la pila, por su parte, inicia su existencia en el extremo superior
+(65.536) y desciende con la debida discreción. Las cadenas de caracteres se almacenan a razón de
+un punto de código Unicode por celda, con terminación en 0, gracias a lo cual las tildes y la
+letra eñe funcionan con la corrección que usted, con toda justicia, merece.
 
-Modos de direccionamiento:
+Los modos de direccionamiento disponibles son los que a continuación se detallan:
 
-| Se escribe | Qué hace |
+| Se escribe | Efecto que produce |
 |---|---|
-| `wn` | el registro |
-| `42` / `0x2A` / `0b101010` / `'a'` | inmediato |
-| `etiqueta` | inmediato = **la dirección** de la etiqueta |
-| `[42]` / `[etiqueta]` | la celda en esa dirección |
-| `[wn]` / `[wn+2]` / `[ojete-1]` | la celda apuntada por el registro (más desplazamiento) |
+| `wn` | el registro propiamente tal |
+| `42` / `0x2A` / `0b101010` / `'a'` | valor inmediato |
+| `etiqueta` | valor inmediato equivalente a **la dirección** de la etiqueta |
+| `[42]` / `[etiqueta]` | la celda residente en dicha dirección |
+| `[wn]` / `[wn+2]` / `[ojete-1]` | la celda señalada por el registro (con el desplazamiento que se sirva indicar) |
 
-## El set de instrucciones
+## Del repertorio de instrucciones
 
-Los mnemónicos no distinguen mayúsculas ni tildes (`métetelo` ≡ `METETELO` ≡ `metetelo`).
-Los apóstrofes se ignoran (`pa'llá` ≡ `palla`). Comentarios con `#` o `;`.
+Tenga usted la bondad de considerar que los mnemónicos no distinguen mayúsculas ni tildes
+(`métetelo` ≡ `METETELO` ≡ `metetelo`), y que los apóstrofes son cortésmente ignorados
+(`pa'llá` ≡ `palla`). Los comentarios se introducen mediante `#` o `;`.
 
-### Movimiento
+### Del movimiento de datos
 
-| Wea | Hace |
+| Wea | Cometido |
 |---|---|
 | `metetelo dst, src` | MOV — dst = src |
-| `chupate dst, [dir]` | LOAD (es el mismo MOV, pero se lee mejor) |
-| `dejalo en [dir], src` | STORE (ídem) |
+| `chupate dst, [dir]` | LOAD (idéntico al MOV, si bien de lectura más grata) |
+| `dejalo en [dir], src` | STORE (mutatis mutandis) |
 | `tragate src` | PUSH |
 | `vomitate dst` | POP |
 | `cambiense a, b` | XCHG |
 
-### Aritmética (todas dejan el `sapeo` listo)
+### De la aritmética (todas dejan `sapeo` debidamente actualizado)
 
-| Wea | Hace |
+| Wea | Cometido |
 |---|---|
 | `echale mas dst, src` | ADD |
 | `sacale dst, src` | SUB |
 | `culialo dst, src` | MUL |
-| `partele el pico dst, src` | DIV (truncada, como C; por cero revienta con estilo) |
+| `partele el pico dst, src` | DIV (truncada, a la usanza de C; la división por cero es declinada con firmeza) |
 | `lo que caga dst, src` | MOD |
 | `se le paro dst` | INC |
 | `se le bajo dst` | DEC |
 | `dale vuelta dst` | NEG |
 
-### Lógica
+### De la lógica
 
-| Wea | Hace |
+| Wea | Cometido |
 |---|---|
 | `las dos weas dst, src` | AND |
 | `cualquier wea dst, src` | OR |
@@ -135,14 +157,15 @@ Los apóstrofes se ignoran (`pa'llá` ≡ `palla`). Comentarios con `#` o `;`.
 | `correlo paca dst, n` | SAR (aritmético) |
 | `correlo paca pelao dst, n` | SHR (lógico) |
 
-### Comparar y saltar
+### De la comparación y los saltos
 
-`cachai si a, b` compara (con signo, sin trampas de overflow) y deja el veredicto en
-`sapeo`. Después saltas:
+La instrucción `cachai si a, b` efectúa la comparación (con signo, y sin incurrir en los
+infortunios propios del desbordamiento) y deposita su dictamen en `sapeo`. Acto seguido, usted
+podrá saltar según le venga en gana:
 
 | Wea | Salta si |
 |---|---|
-| `arranca pa L` | siempre (acepta registro: salto indirecto) |
+| `arranca pa L` | incondicionalmente (admite registro: salto indirecto) |
 | `si po L` | a == b |
 | `nica po L` | a != b |
 | `re brigido L` | a > b |
@@ -150,57 +173,60 @@ Los apóstrofes se ignoran (`pa'llá` ≡ `palla`). Comentarios con `#` o `;`.
 | `brigido noma L` | a >= b |
 | `penca noma L` | a <= b |
 
-### Funciones
+### De las funciones
 
-| Wea | Hace |
+| Wea | Cometido |
 |---|---|
-| `hazme la pega L` | CALL — empuja el retorno y salta |
+| `hazme la pega L` | CALL — deposita el retorno en la pila y salta |
 | `toma` | RET |
-| `abrete N` | ENTER — arma el marco y reserva N locales |
-| `cierrate` | LEAVE — desarma el marco |
+| `abrete N` | ENTER — constituye el marco y reserva N variables locales |
+| `cierrate` | LEAVE — disuelve el marco con la debida ceremonia |
 
-Convención: argumentos por la pila de derecha a izquierda, **el que llama limpia**
-(`echale mas hoyo, N`), resultado en `pico`. Con `abrete 0`: `[ojete+2]` es el primer
-argumento, `[ojete+1]` el retorno, `[ojete-1]` el primer local.
+En cuanto a la convención de llamada, los argumentos se entregan por la pila de derecha a
+izquierda, la limpieza corre por gentileza de quien llama (`echale mas hoyo, N`), y el resultado
+es restituido en `pico`. Habiendo ejecutado `abrete 0`: `[ojete+2]` alberga el primer argumento,
+`[ojete+1]` la dirección de retorno, y `[ojete-1]` la primera variable local.
 
-### Entrada / salida
+### De la entrada y la salida
 
-| Wea | Hace |
+| Wea | Cometido |
 |---|---|
-| `sueltate un src` | imprime el número + salto de línea |
-| `sueltate un cacho src` | imprime el número pelado |
-| `chamulla "..."` / `chamulla etiqueta` / `chamulla reg` | imprime un string |
-| `escupe una letra src` | imprime un carácter (codepoint) |
-| `pesca dst` | lee un entero de stdin |
-| `pesca una letra dst` | lee un carácter (-1 si EOF) |
-| `desnudate` | vuelca todos los registros a stderr (pa cachar qué pasa) |
+| `sueltate un src` | imprime el número, seguido de un salto de línea |
+| `sueltate un cacho src` | imprime el número, sin aditamento alguno |
+| `chamulla "..."` / `chamulla etiqueta` / `chamulla reg` | imprime una cadena de caracteres |
+| `escupe una letra src` | imprime un carácter (punto de código) |
+| `pesca dst` | recibe un entero desde la entrada estándar |
+| `pesca una letra dst` | recibe un carácter (-1 en caso de EOF) |
+| `desnudate` | vuelca la totalidad de los registros a stderr, para su ilustración |
 
-### Sistema
+### Del sistema
 
-| Wea | Hace |
+| Wea | Cometido |
 |---|---|
-| `ya wn para` | HALT — terminar bien (exit 0) |
-| `conchetumare "msg"` | abortar con mensaje (exit 1) |
-| `pajeandome` | NOP — puro weveo |
-| `al lote dst, max` | aleatorio en [0, max) |
-| `esperate un cacho ms` | dormir (tope 60 segundos) |
+| `ya wn para` | HALT — concluye honrosamente (exit 0) |
+| `conchetumare "msg"` | aborta con mensaje (exit 1), no sin antes lamentar lo ocurrido |
+| `pajeandome` | NOP — ocio absoluto |
+| `al lote dst, max` | número aleatorio en [0, max) |
+| `esperate un cacho ms` | reposa (con un máximo de 60 segundos, por prudencia) |
 
-## Directivas
+## De las directivas
 
-| Wea | Hace |
+| Wea | Cometido |
 |---|---|
-| `.la wea` | empieza la sección de datos |
-| `.la pega` | empieza la sección de código (es la sección por defecto) |
-| `etiqueta:` | define una etiqueta (de dato o de código según la sección) |
-| `chamullo "texto"` | string en memoria, terminado en 0 |
+| `.la wea` | da comienzo a la sección de datos |
+| `.la pega` | da comienzo a la sección de código (sección por defecto, para su comodidad) |
+| `etiqueta:` | define una etiqueta (de dato o de código, según la sección en que resida) |
+| `chamullo "texto"` | cadena en memoria, con terminación en 0 |
 | `numerito a, b, c` | enteros consecutivos |
-| `puros hoyos N` | reserva N celdas en cero |
+| `puros hoyos N` | reserva N celdas debidamente puestas a cero |
 | `dale con NOMBRE = v` | constante |
-| `.empezamos en L` | punto de entrada (si no, la etiqueta `inicio`, si no, la primera instrucción) |
+| `.empezamos en L` | punto de entrada (en su defecto, la etiqueta `inicio`; en defecto de ambos, la primera instrucción) |
 
-## Cuando la cagas
+## De los errores
 
-Los errores vienen con línea y con el cariño característico:
+En la infortunada eventualidad de que usted incurriese en alguna imprecisión, el sistema tendrá
+a bien comunicárselo con el número de línea correspondiente y con el afecto que lo caracteriza.
+Le ruego recibir los siguientes ejemplos con espíritu comprensivo:
 
 ```
 [wea] Conchetumare weon, escribiste una wea que no cacho -> 'pescate' (linea 4)
@@ -210,34 +236,46 @@ Los errores vienen con línea y con el cariño característico:
 [wea] Al sapeo no se le escribe, solo se mira po ql (linea 3)
 ```
 
-## Ejemplos
+## De los ejemplos
 
-En [examples/](examples/): `holamundo`, `fizzbuzz`, `fibonacci`, `factorial` (recursión
-con marcos de pila), `ordena` (bubble sort in place con direccionamiento indexado),
-`adivina` (juego interactivo con `pesca` y `al lote`) y `chelas` (las 99 chelas en la
-pared, el clásico que todo lenguaje tiene que poder cantar — con singular, plural y
-verso final como corresponde).
+En el directorio [examples/](examples/) hallará usted, dispuestos para su deleite: `holamundo`,
+`fizzbuzz`, `fibonacci`, `factorial` (recursión con marcos de pila en toda regla), `ordena`
+(ordenamiento de burbuja in situ, con direccionamiento indexado), `adivina` (entretenimiento
+interactivo que hace uso de `pesca` y `al lote`) y `chelas` (las noventa y nueve cervezas en la
+pared, pieza clásica que todo lenguaje que se precie ha de saber entonar, ejecutada con singular,
+plural y verso final, como el buen gusto lo exige).
 
-## Resaltado de sintaxis
+## Del realce de sintaxis
 
-Copia la carpeta `editor/vscode-wea` a `%USERPROFILE%\.vscode\extensions\` y reinicia
-VS Code. Los `.wea` quedan con colores.
+Si usted tuviese la gentileza de copiar la carpeta `editor/vscode-wea` en
+`%USERPROFILE%\.vscode\extensions\` y de reiniciar Visual Studio Code, los archivos `.wea`
+lucirán colores, atención que espero sea de su completo agrado.
 
-## Cómo está hecho
+## De su construcción interna
 
-Todo el compilador y la máquina virtual están escritos en **ensamblador MASM x64**:
+La totalidad del compilador y de la máquina virtual ha sido escrita en ensamblador MASM x64,
+conforme al siguiente reparto de responsabilidades:
 
 - `src/tablas.asm` — la única fuente de verdad del ISA (frases, opcodes, registros)
-- `src/lexer.asm` — reconoce las frases multi-palabra por *maximal munch* (por eso
-  `sueltate un cacho` le gana a `sueltate un`)
+- `src/lexer.asm` — reconoce las frases de múltiples palabras mediante *maximal munch* (en cuya
+  virtud `sueltate un cacho` prevalece sobre `sueltate un`)
 - `src/util.asm` — normalizador (tildes → ascii, mayúsculas → minúsculas), UTF-8, itoa/atoi
-- `src/ensamblador.asm` — dos pasadas: layout de símbolos y literales, después emisión
-- `src/vm.asm` — fetch/decode/execute con jump table; acá el hardware coopera: los
-  registros de 32 bits ya hacen wrap solos y `idiv` ya trunca como C
+- `src/ensamblador.asm` — dos pasadas: disposición de símbolos y literales, y ulterior emisión
+- `src/vm.asm` — fetch/decode/execute con jump table; me complace informar que el hardware
+  coopera: los registros de 32 bits practican el wrap por iniciativa propia e `idiv` trunca a la
+  usanza de C
 - `src/compilador.asm` — el AOT: recorre el bytecode y emite texto MASM x64
-- `src/runtime.asm` — lo que llaman los .exe compilados (print, pesca, al lote...)
-- `src/errores.asm` — el catálogo de garabatos
-- `src/wea.asm` — el CLI
+- `src/runtime.asm` — aquello que los ejecutables compilados tienen a bien invocar (impresión,
+  `pesca`, `al lote`, etcétera)
+- `src/errores.asm` — el catálogo de amonestaciones
+- `src/wea.asm` — la interfaz de línea de órdenes
 
-El bytecode usa operandos de ancho fijo (`modo:u8, reg:u8, valor:i32`), así que el tamaño
-de cada instrucción se conoce en la primera pasada y no hay relajación de saltos.
+El bytecode emplea operandos de anchura fija (`modo:u8, reg:u8, valor:i32`), merced a lo cual el
+tamaño de cada instrucción se conoce desde la primera pasada, tornando innecesaria toda
+relajación de saltos.
+
+---
+
+Muy atentamente,
+
+**Jamonoid**
