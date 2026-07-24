@@ -17,8 +17,8 @@ cd /d "%~dp0"
 if not exist bin mkdir bin
 if not exist obj mkdir obj
 
-set SRC=src\util.asm src\archivo.asm src\tablas.asm src\lexer.asm src\ensamblador.asm src\vm.asm src\errores.asm src\wea.asm
-set OBJ=obj\util.obj obj\archivo.obj obj\tablas.obj obj\lexer.obj obj\ensamblador.obj obj\vm.obj obj\errores.obj obj\wea.obj
+set SRC=src\util.asm src\archivo.asm src\tablas.asm src\lexer.asm src\ensamblador.asm src\vm.asm src\errores.asm src\compilador.asm src\wea.asm
+set OBJ=obj\util.obj obj\archivo.obj obj\tablas.obj obj\lexer.obj obj\ensamblador.obj obj\vm.obj obj\errores.obj obj\compilador.obj obj\wea.obj
 
 for %%f in (%SRC%) do (
     ml64 /nologo /c /I src /Fo obj\%%~nf.obj %%f
@@ -29,6 +29,13 @@ for %%f in (%SRC%) do (
         echo ============================================
         exit /b 1
     )
+)
+
+rem el runtime NO va dentro de wea.exe: acompana a los .exe compilados
+ml64 /nologo /c /I src /Fo obj\runtime.obj src\runtime.asm
+if errorlevel 1 (
+    echo LA CAGASTE: no ensambla src\runtime.asm
+    exit /b 1
 )
 
 link /nologo /subsystem:console /entry:inicio /out:bin\wea.exe %OBJ% kernel32.lib

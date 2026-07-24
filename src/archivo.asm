@@ -6,6 +6,7 @@ include winapi.inc
 
 PUBLIC leer_archivo         ; rcx=ruta asciiz -> rax=ptr (0 si fallo), rdx=largo
 PUBLIC pedir_memoria        ; rcx=bytes -> rax=ptr (0 si fallo)
+PUBLIC escribir_archivo     ; rcx=ruta, rdx=ptr, r8=largo -> eax 1/0
 
 .data
 leidos      dq 0
@@ -121,5 +122,58 @@ la_fallo:
     pop     rbx
     ret
 leer_archivo ENDP
+
+; ------------------------------------------------------------
+; escribir_archivo: rcx=ruta, rdx=ptr, r8=largo -> eax 1/0
+; ------------------------------------------------------------
+escribir_archivo PROC
+    push    rbx
+    push    rsi
+    push    rdi
+    push    rbp
+    mov     rbp, rsp
+    and     rsp, -16
+    sub     rsp, 40h                ; shadow + 3 args extra
+    mov     rsi, rdx                ; ptr
+    mov     rdi, r8                 ; largo
+
+    ; CreateFileA(ruta, GENERIC_WRITE, 0, 0, CREATE_ALWAYS, NORMAL, 0)
+    mov     edx, GENERIC_WRITE
+    xor     r8d, r8d
+    xor     r9d, r9d
+    mov     dword ptr [rsp+20h], CREATE_ALWAYS
+    mov     dword ptr [rsp+28h], FILE_ATTRIBUTE_NORMAL
+    mov     qword ptr [rsp+30h], 0
+    call    CreateFileA
+    cmp     rax, INVALID_HANDLE_VALUE
+    je      ea_fallo
+    mov     rbx, rax
+
+    mov     rcx, rbx
+    mov     rdx, rsi
+    mov     r8, rdi
+    lea     r9, leidos
+    mov     qword ptr [rsp+20h], 0
+    call    WriteFile
+    test    eax, eax
+    jz      ea_cerrar_fallo
+
+    mov     rcx, rbx
+    call    CloseHandle
+    mov     eax, 1
+    jmp     ea_ret
+ea_cerrar_fallo:
+    mov     rcx, rbx
+    call    CloseHandle
+ea_fallo:
+    xor     eax, eax
+ea_ret:
+    mov     rsp, rbp
+    pop     rbp
+    pop     rdi
+    pop     rsi
+    pop     rbx
+    ret
+escribir_archivo ENDP
 
 END

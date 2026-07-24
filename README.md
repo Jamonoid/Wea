@@ -39,12 +39,26 @@ powershell -File tests\corre_tests.ps1
 ## Uso
 
 ```
-wea corre programa.wea [--semilla=N]    ejecuta
+wea corre programa.wea [--semilla=N]    ejecuta (interpretado)
 wea revisa programa.wea                 solo compila (a ver si ta bueno)
+wea compila programa.wea                genera el .gen.asm (MASM x64)
 wea programa.wea                        atajo de corre
 ```
 
 Exit codes: `0` todo filete · `1` reventó corriendo (o `conchetumare`) · `2` no compiló.
+
+### Compilar a .exe nativo
+
+```
+.\compila.bat programa.wea      ->  bin\programa.exe
+```
+
+Sí: Wea también es un **compilador de verdad**. `wea compila` traduce el bytecode a
+ensamblador MASM x64 (los 8 registros garabato quedan mapeados a registros x64 reales:
+`wn`→`ebx`, `ql`→`ebp`, `pico`→`esi`, `tetas`→`edi`, `pichula`→`r12d`, `poto`→`r13d`,
+`chucha`→`r14d`, `raja`→`r15d`), y `compila.bat` lo pasa por `ml64` + `link` junto al
+runtime. Sale un ejecutable standalone de ~8 KB que corre sin la VM. `culialo pico, wn`
+termina siendo un `imul` de verdad po.
 
 ## Los registros
 
@@ -198,9 +212,11 @@ Los errores vienen con línea y con el cariño característico:
 
 ## Ejemplos
 
-En [examples/](examples/): `hola`, `fizzbuzz`, `fibonacci`, `factorial` (recursión con
-marcos de pila), `ordena` (bubble sort in place con direccionamiento indexado) y
-`adivina` (juego interactivo con `pesca` y `al lote`).
+En [examples/](examples/): `holamundo`, `fizzbuzz`, `fibonacci`, `factorial` (recursión
+con marcos de pila), `ordena` (bubble sort in place con direccionamiento indexado),
+`adivina` (juego interactivo con `pesca` y `al lote`) y `chelas` (las 99 chelas en la
+pared, el clásico que todo lenguaje tiene que poder cantar — con singular, plural y
+verso final como corresponde).
 
 ## Resaltado de sintaxis
 
@@ -218,6 +234,8 @@ Todo el compilador y la máquina virtual están escritos en **ensamblador MASM x
 - `src/ensamblador.asm` — dos pasadas: layout de símbolos y literales, después emisión
 - `src/vm.asm` — fetch/decode/execute con jump table; acá el hardware coopera: los
   registros de 32 bits ya hacen wrap solos y `idiv` ya trunca como C
+- `src/compilador.asm` — el AOT: recorre el bytecode y emite texto MASM x64
+- `src/runtime.asm` — lo que llaman los .exe compilados (print, pesca, al lote...)
 - `src/errores.asm` — el catálogo de garabatos
 - `src/wea.asm` — el CLI
 

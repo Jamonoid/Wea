@@ -21,24 +21,31 @@ EXTERN mem_igual: PROC
 EXTERN str_largo: PROC
 EXTERN e_archivo: BYTE
 EXTERN e_uso: BYTE
+EXTERN compilar_a_asm: PROC
 
 PUBLIC inicio
 
-MODO_CORRE  equ 0
-MODO_REVISA equ 1
+MODO_CORRE   equ 0
+MODO_REVISA  equ 1
+MODO_COMPILA equ 2
 
 .data
 sub_corre   db "corre", 0
 sub_run     db "run", 0
 sub_revisa  db "revisa", 0
 sub_check   db "check", 0
+sub_compila db "compila", 0
+sub_build   db "build", 0
 pre_semilla db "--semilla=", 0
 msg_filete  db "ta filete, compila la wea", 0
+msg_gen     db "quedo lista la wea generada (.gen.asm), ahora ml64 hace el resto", 0
+ext_gen     db ".gen.asm", 0
 
 modo        dd MODO_CORRE
 tok_sub     db 260 dup (0)
 tok_arch    db 260 dup (0)
 tok_flag    db 260 dup (0)
+sal_path    db 300 dup (0)
 
 .code
 
@@ -182,6 +189,62 @@ pf_fin:
     ret
 procesar_flag ENDP
 
+; ------------------------------------------------------------
+; armar_salida: rbx = ruta de entrada asciiz
+; llena sal_path = ruta sin extension + ".gen.asm"
+; ------------------------------------------------------------
+armar_salida PROC PRIVATE
+    push    rsi
+    push    rdi
+    push    r12
+    sub     rsp, 20h
+    mov     rsi, rbx
+    lea     rdi, sal_path
+    xor     r12, r12                ; posicion del ultimo '.' (0 = ninguno)
+    xor     rax, rax                ; indice
+as_copia:
+    mov     cl, [rsi+rax]
+    mov     [rdi+rax], cl
+    test    cl, cl
+    jz      as_copiado
+    cmp     cl, '.'
+    jne     as_no_punto
+    mov     r12, rax
+as_no_punto:
+    cmp     cl, '\'
+    je      as_reset
+    cmp     cl, '/'
+    jne     as_sigue
+as_reset:
+    xor     r12, r12                ; punto de un directorio: no vale
+as_sigue:
+    inc     rax
+    cmp     rax, 288
+    jb      as_copia
+as_copiado:
+    ; truncar en el punto (si hubo) y pegar ".gen.asm"
+    test    r12, r12
+    jz      as_sin_punto
+    mov     rax, r12
+as_sin_punto:
+    lea     rdi, [rdi+rax]
+    lea     rsi, ext_gen
+as_ext:
+    mov     cl, [rsi]
+    mov     [rdi], cl
+    test    cl, cl
+    jz      as_fin
+    inc     rsi
+    inc     rdi
+    jmp     as_ext
+as_fin:
+    add     rsp, 20h
+    pop     r12
+    pop     rdi
+    pop     rsi
+    ret
+armar_salida ENDP
+
 ; ============================================================
 ; inicio - entry point
 ; ============================================================
@@ -235,6 +298,16 @@ ini_hay_args:
     call    igual_z
     test    eax, eax
     jnz     ini_es_revisa
+    lea     rcx, tok_sub
+    lea     rdx, sub_compila
+    call    igual_z
+    test    eax, eax
+    jnz     ini_es_compila
+    lea     rcx, tok_sub
+    lea     rdx, sub_build
+    call    igual_z
+    test    eax, eax
+    jnz     ini_es_compila
     ; no es subcomando: es el archivo directo. correr.
     ; tok_arch pasa a ser flag
     lea     rcx, tok_arch
@@ -242,6 +315,9 @@ ini_hay_args:
     lea     rcx, tok_sub            ; el "subcomando" era el archivo
     jmp     ini_cargar
 
+ini_es_compila:
+    mov     dword ptr modo, MODO_COMPILA
+    jmp     ini_con_sub
 ini_es_revisa:
     mov     dword ptr modo, MODO_REVISA
     jmp     ini_con_sub
@@ -288,8 +364,20 @@ ini_vm_ok:
     call    ensamblar
 
     cmp     dword ptr modo, MODO_REVISA
-    jne     ini_correr
+    jne     ini_no_revisa
     lea     rcx, msg_filete
+    call    aviso
+    xor     ecx, ecx
+    call    ExitProcess
+
+ini_no_revisa:
+    cmp     dword ptr modo, MODO_COMPILA
+    jne     ini_correr
+    ; armar la ruta de salida: <entrada sin extension>.gen.asm
+    call    armar_salida            ; usa rbx (ruta entrada), llena sal_path
+    lea     rcx, sal_path
+    call    compilar_a_asm
+    lea     rcx, msg_gen
     call    aviso
     xor     ecx, ecx
     call    ExitProcess

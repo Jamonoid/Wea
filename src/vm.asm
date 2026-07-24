@@ -211,6 +211,8 @@ push_vm PROC PRIVATE
     lea     rcx, regs
     mov     edx, [rcx+REG_HOYO*4]
     dec     edx
+    cmp     edx, MEM_PALABRAS       ; hoyo era 0 o basura: wrap unsigned
+    jae     pv_over
     cmp     edx, asm_datos_fin      ; guardia: no pisar los datos
     jbe     pv_over
     mov     [rcx+REG_HOYO*4], edx

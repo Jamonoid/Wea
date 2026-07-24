@@ -1,0 +1,56 @@
+# chelas.wea - 99 chelas en la pared
+# el clasico de los clasicos: lo que todo lenguaje tiene que poder cantar.
+# maneja singular/plural ("1 chela" vs "2 chelas") y el verso final.
+
+.la pega
+inicio:
+    metetelo poto, 99
+
+vuelta:
+    # "N chelas en la pared, N chelas."
+    tragate poto
+    hazme la pega imprime_chelas
+    echale mas hoyo, 1
+    chamulla " en la pared, "
+    tragate poto
+    hazme la pega imprime_chelas
+    echale mas hoyo, 1
+    chamulla ".\n"
+
+    # "Te tomai una, la dejai caer, N-1 chelas en la pared."
+    chamulla "Te tomai una, la dejai caer, "
+    se le bajo poto
+    tragate poto
+    hazme la pega imprime_chelas
+    echale mas hoyo, 1
+    chamulla " en la pared.\n\n"
+
+    cachai si poto, 0
+    nica po vuelta
+
+    # verso final
+    chamulla "Ni una chela en la pared, ni una chela.\n"
+    chamulla "Anda a comprar mas po aweonao, 99 chelas en la pared.\n"
+    ya wn para
+
+# ---- imprime_chelas(n): "N chelas" / "1 chela" / "ni una chela" ----
+# argumento por la pila, como manda la convencion
+imprime_chelas:
+    abrete 0
+    chupate wn, [ojete+2]
+    cachai si wn, 0
+    si po ic_cero
+    cachai si wn, 1
+    si po ic_una
+    sueltate un cacho wn
+    chamulla " chelas"
+    cierrate
+    toma
+ic_una:
+    chamulla "1 chela"
+    cierrate
+    toma
+ic_cero:
+    chamulla "ni una chela"
+    cierrate
+    toma
