@@ -1,0 +1,26 @@
+{
+  "name": "vscode-wea",
+  "displayName": "Wea",
+  "description": "Resaltado de sintaxis para el lenguaje ensamblador chileno Wea",
+  "version": "0.1.0",
+  "publisher": "wea-lang",
+  "engines": { "vscode": "^1.70.0" },
+  "categories": ["Programming Languages"],
+  "contributes": {
+    "languages": [
+      {
+        "id": "wea",
+        "aliases": ["Wea", "wea"],
+        "extensions": [".wea"],
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "wea",
+        "scopeName": "source.wea",
+        "path": "./syntaxes/wea.tmLanguage.json"
+      }
+    ]
+  }
+}

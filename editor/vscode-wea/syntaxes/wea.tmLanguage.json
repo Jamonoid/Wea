@@ -1,0 +1,67 @@
+{
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "name": "Wea",
+  "scopeName": "source.wea",
+  "patterns": [
+    { "include": "#comentarios" },
+    { "include": "#strings" },
+    { "include": "#directivas" },
+    { "include": "#etiquetas" },
+    { "include": "#instrucciones" },
+    { "include": "#registros" },
+    { "include": "#numeros" }
+  ],
+  "repository": {
+    "comentarios": {
+      "patterns": [
+        { "name": "comment.line.number-sign.wea", "match": "#.*$" },
+        { "name": "comment.line.semicolon.wea", "match": ";.*$" }
+      ]
+    },
+    "strings": {
+      "name": "string.quoted.double.wea",
+      "begin": "\"",
+      "end": "\"",
+      "patterns": [
+        { "name": "constant.character.escape.wea", "match": "\\\\[ntr0\\\\\"]" }
+      ]
+    },
+    "directivas": {
+      "patterns": [
+        {
+          "name": "keyword.control.directive.wea",
+          "match": "(?i)^\\s*\\.(la\\s+wea|la\\s+pega|empezamos\\s+en)\\b"
+        },
+        {
+          "name": "storage.type.wea",
+          "match": "(?i)\\b(dale\\s+con|chamullo|numerito|puros\\s+hoyos)\\b"
+        }
+      ]
+    },
+    "etiquetas": {
+      "name": "entity.name.function.wea",
+      "match": "^\\s*[A-Za-z_áéíóúñ][A-Za-z0-9_áéíóúñ]*:"
+    },
+    "instrucciones": {
+      "patterns": [
+        {
+          "comment": "frases largas primero: maximal munch igual que el lexer",
+          "name": "keyword.other.instruction.wea",
+          "match": "(?i)\\b(c[oó]rrelo\\s+pa'?c[aá]\\s+pelao|esp[eé]rate\\s+un\\s+cacho|su[eé]ltate\\s+un\\s+cacho|escupe\\s+una\\s+letra|pesca\\s+una\\s+letra|p[aá]rtele\\s+el\\s+pico|c[oó]rrelo\\s+pa'?ll[aá]|c[oó]rrelo\\s+pa'?c[aá]|hazme\\s+la\\s+pega|br[ií]gido\\s+nom[aá]s?|una\\s+o\\s+la\\s+otra|cualquier\\s+wea|las\\s+dos\\s+weas|penca\\s+nom[aá]s?|su[eé]ltate\\s+un|lo\\s+que\\s+caga|conchetumare|se\\s+le\\s+par[oó]|se\\s+le\\s+baj[oó]|dale\\s+vuelta|paje[aá]ndome|re\\s+br[ií]gido|desn[uú]date|ya\\s+wn\\s+para|m[eé]t[eé]telo|c[aá]mbiense|[eé]chale\\s+m[aá]s|d[eé]jalo\\s+en|arranca\\s+pa|vom[ií]tate|cachai\\s+si|ci[eé]rrate|tr[aá]gate|ch[uú]pate|re\\s+penca|c[uú]lialo|chamulla|s[aá]cale|al\\s+lote|[aá]brete|nica\\s+po|ni\\s+pico|si\\s+po|pesca|toma)\\b"
+        }
+      ]
+    },
+    "registros": {
+      "name": "variable.language.register.wea",
+      "match": "(?i)\\b(wn|ql|pico|tetas|pichula|poto|chucha|raja|hoyo|ojete|sapeo)\\b"
+    },
+    "numeros": {
+      "patterns": [
+        { "name": "constant.numeric.hex.wea", "match": "\\b0x[0-9a-fA-F]+\\b" },
+        { "name": "constant.numeric.binary.wea", "match": "\\b0b[01]+\\b" },
+        { "name": "constant.numeric.integer.wea", "match": "-?\\b[0-9]+\\b" },
+        { "name": "constant.character.wea", "match": "'.'" }
+      ]
+    }
+  }
+}

@@ -1,0 +1,21 @@
+# fibonacci.wea - los primeros 15, al seco
+
+.la pega
+inicio:
+    metetelo wn, 0
+    metetelo ql, 1
+    metetelo tetas, 15
+
+vuelta:
+    cachai si tetas, 0
+    si po fin
+    sueltate un wn
+    metetelo pico, wn
+    echale mas pico, ql
+    metetelo wn, ql
+    metetelo ql, pico
+    se le bajo tetas
+    arranca pa vuelta
+
+fin:
+    ya wn para

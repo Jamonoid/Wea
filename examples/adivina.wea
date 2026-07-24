@@ -1,0 +1,24 @@
+# adivina.wea - adivina el numero. usa 'al lote' (random) y 'pesca' (stdin)
+
+.la pega
+inicio:
+    al lote poto, 100           ; 0..99
+    se le paro poto             ; 1..100
+    chamulla "adivina el numero (1 al 100) po\n"
+
+vuelta:
+    chamulla "dale: "
+    pesca wn
+    cachai si wn, poto
+    si po gano
+    re penca mas_arriba
+    chamulla "menos po\n"
+    arranca pa vuelta
+
+mas_arriba:
+    chamulla "mas po\n"
+    arranca pa vuelta
+
+gano:
+    chamulla "wena wn, la cachaste\n"
+    ya wn para

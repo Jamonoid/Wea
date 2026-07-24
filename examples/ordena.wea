@@ -1,0 +1,73 @@
+# ordena.wea - bubble sort in place. la prueba de fuego del ISA:
+# lectura Y escritura con [registro+desplazamiento]
+
+.la wea
+lista:   numerito 42, 7, 99, 13, 1, 64, 8
+largo:   numerito 7
+
+.la pega
+inicio:
+    chamulla "antes:  "
+    hazme la pega muestra
+    hazme la pega burbuja
+    chamulla "ahora:  "
+    hazme la pega muestra
+    ya wn para
+
+# ---- burbuja: ordena lista in place ----
+burbuja:
+    chupate tetas, [largo]
+    cachai si tetas, 2
+    re penca bu_listo           ; n < 2: na que hacer
+    metetelo poto, 0            ; i = 0
+bu_ext:
+    metetelo raja, tetas
+    sacale raja, 1
+    cachai si poto, raja
+    brigido noma bu_listo       ; i >= n-1: lista ordenada
+    metetelo chucha, 0          ; j = 0
+bu_int:
+    metetelo raja, tetas
+    sacale raja, poto
+    sacale raja, 1
+    cachai si chucha, raja
+    brigido noma bu_sig_ext     ; j >= n-1-i: otra pasada
+    metetelo pichula, lista     ; pichula = &lista
+    echale mas pichula, chucha  ; pichula = &lista[j]
+    chupate wn, [pichula]
+    chupate ql, [pichula+1]
+    cachai si wn, ql
+    penca noma bu_sig_int       ; a[j] <= a[j+1]: piola
+    dejalo en [pichula], ql     ; swap po
+    dejalo en [pichula+1], wn
+bu_sig_int:
+    se le paro chucha
+    arranca pa bu_int
+bu_sig_ext:
+    se le paro poto
+    arranca pa bu_ext
+bu_listo:
+    toma
+
+# ---- muestra: imprime "a, b, c" ----
+muestra:
+    chupate tetas, [largo]
+    metetelo poto, 0
+mu_loop:
+    cachai si poto, tetas
+    brigido noma mu_fin
+    metetelo raja, lista
+    echale mas raja, poto
+    chupate wn, [raja]
+    sueltate un cacho wn
+    metetelo raja, tetas
+    sacale raja, 1
+    cachai si poto, raja
+    si po mu_ultimo             ; el ultimo va sin coma
+    chamulla ", "
+mu_ultimo:
+    se le paro poto
+    arranca pa mu_loop
+mu_fin:
+    escupe una letra 10
+    toma

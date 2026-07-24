@@ -1,0 +1,32 @@
+# factorial.wea - recursion de verdad, con marcos de pila y todo
+# convencion: el argumento va por la pila, el resultado vuelve en pico
+
+.la pega
+inicio:
+    chamulla "el factorial de 10 es "
+    metetelo wn, 10
+    tragate wn
+    hazme la pega factorial
+    echale mas hoyo, 1          ; el que llama limpia
+    sueltate un pico
+    ya wn para
+
+# factorial(n):  [ojete+2] = n
+factorial:
+    abrete 0
+    chupate wn, [ojete+2]
+    cachai si wn, 1
+    re brigido recursa          ; n > 1 -> recursar
+    metetelo pico, 1            ; caso base
+    cierrate
+    toma
+recursa:
+    tragate wn                  ; guardar n (los registros no sobreviven)
+    sacale wn, 1
+    tragate wn                  ; argumento n-1
+    hazme la pega factorial
+    echale mas hoyo, 1          ; limpiar argumento
+    vomitate wn                 ; recuperar n
+    culialo pico, wn            ; pico = factorial(n-1) * n
+    cierrate
+    toma

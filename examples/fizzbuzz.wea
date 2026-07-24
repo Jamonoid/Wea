@@ -1,0 +1,46 @@
+# fizzbuzz.wea - del 1 al 100, como en las entrevistas de pega
+
+.la pega
+inicio:
+    metetelo wn, 1
+
+vuelta:
+    cachai si wn, 100
+    re brigido fin              ; wn > 100 -> cortamos
+
+    metetelo ql, wn
+    lo que caga ql, 15
+    cachai si ql, 0
+    si po es_fizzbuzz
+
+    metetelo ql, wn
+    lo que caga ql, 3
+    cachai si ql, 0
+    si po es_fizz
+
+    metetelo ql, wn
+    lo que caga ql, 5
+    cachai si ql, 0
+    si po es_buzz
+
+    sueltate un wn
+    arranca pa sigue
+
+es_fizzbuzz:
+    chamulla "FizzBuzz"
+    escupe una letra 10
+    arranca pa sigue
+es_fizz:
+    chamulla "Fizz"
+    escupe una letra 10
+    arranca pa sigue
+es_buzz:
+    chamulla "Buzz"
+    escupe una letra 10
+
+sigue:
+    se le paro wn
+    arranca pa vuelta
+
+fin:
+    ya wn para
